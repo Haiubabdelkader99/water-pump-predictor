@@ -1,81 +1,126 @@
-# 💧 Water Pump Predictor / Predicción del Estado de Bombas de Agua
 
-**DrivenData Challenge: "Pump it Up - Data Mining the Water Table"**  
-Score obtenido en la leaderboard pública: **0.8185**
+# 💧 Water Pump Predictor - Tanzania
+
+**Machine Learning app to predict the operational status of water pumps in Tanzania**, based on the [DrivenData "Pump It Up" challenge](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/).
 
 ---
 
+<<<<<<< HEAD
 ##  Project Overview / Descripción del Proyecto
+=======
+## 📌 Project Overview
+>>>>>>> 0951ddd (Update README with app details)
 
-**ENGLISH:**  
-This machine learning project aims to predict the functional status of water pumps in rural Tanzania using structured data. It is based on the DrivenData competition and uses models like Random Forest, XGBoost and LightGBM with tailored preprocessing and feature engineering.
+This app uses a trained `Random Forest` model to classify water pumps as:
 
-**ESPAÑOL:**  
-Este proyecto de machine learning tiene como objetivo predecir el estado funcional de bombas de agua en zonas rurales de Tanzania. Se basa en la competición de DrivenData y utiliza modelos como Random Forest, XGBoost y LightGBM, aplicando técnicas de preprocesado y optimización de hiperparámetros.
+- ✅ `functional`
+- ⚠️ `functional needs repair`
+- ❌ `non functional`
+
+It features a full ML pipeline, from preprocessing to prediction, live evaluation and interactive dashboards.
 
 ---
 
+<<<<<<< HEAD
 ##  Final Score / Resultado Final
+=======
+## 🚀 Try it Online
+>>>>>>> 0951ddd (Update README with app details)
 
-- ✅ Model: **Random Forest Classifier**
-- ✅ Public Score: **0.8185**
-- ✅ Feature engineering: population log, construction year, amount_tsh, etc.
-- ✅ Handling of missing values with **KNNImputer**
-- ✅ Encoding with **TargetEncoder**
-- ✅ Hyperparameter tuning with **RandomizedSearchCV**
+You can test the live app hosted on **Streamlit Cloud**:
 
----
-
-## 📂 Repository Structure / Estructura del Repositorio
-
-```
-├── data/                     # Archivos CSV (train, test, labels)
-├── outputs/                  # submission_8185.csv generado
-├── visuals/                  # Gráficos generados (importancia, confusión, EDA)
-├── scripts/                  # Scripts de modelo, validación y comparación
-│   ├── model_final_en.py
-│   ├── 01_EDA.py
-│   ├── 02_Model_Validation.py
-│   └── 03_Model_Comparison_LGBM.py
-├── config.yaml               # Parámetros de configuración
-├── requirements.txt          # Dependencias
-├── README.md                 # Este archivo
-├── CHANGELOG.md              # Historial de versiones
-├── CONTRIBUTING.md           # Guía para contribuciones
-└── LICENSE
-```
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://water-pump-predictor.streamlit.app)
 
 ---
 
+## 🧠 Model & Techniques Used
+
+- RandomForestClassifier (Scikit-learn)
+- KNNImputer for missing values
+- TargetEncoder for categorical variables
+- LabelEncoder for final mapping
+- Feature importance visualization
+- Geo-mapping with Pydeck
+
+---
+
+## 🧭 App Functionalities
+
+### 🔍 1. Prediction Mode
+
+- Upload a test dataset (`Testsetvalues.csv`)
+- Predict status using the trained model
+- Download enriched CSV with predictions
+- Interactive prediction map
+
+### 📊 2. Evaluation Mode
+
+- Upload training and label datasets
+- Shows classification report + confusion matrix
+- Validates the model's performance on full data
+
+### 📈 3. Interactive Dashboard
+
+- Upload prediction results (`predictions_full.csv`)
+- Filter by `region`, `status`, or `construction_year`
+- Explore data visually + map filtered results
+
+---
+
+## 🗂️ Project Structure
+
+```
+📁 water-pump-predictor/
+├── app_v4_final.py               # Streamlit App (v4 with all features)
+├── model_rf.joblib              # Trained RandomForest model
+├── target_encoder.joblib        # Encoder for categorical vars
+├── knn_imputer.joblib           # Fitted KNN imputer
+├── final_columns.joblib         # Ordered feature columns
+├── Trainingsetvalues.csv        # Training data
+├── Trainginsetlabels.csv        # Labels for training data
+├── Testsetvalues.csv            # Data to predict
+├── predictions_full.csv         # Example output with predictions
+├── requirements.txt             # Python dependencies
+└── README.md                    # Project documentation
+```
+
+---
+
+<<<<<<< HEAD
 ##  How to Run / Cómo Ejecutar
+=======
+## 📦 Installation (Local)
+>>>>>>> 0951ddd (Update README with app details)
 
-1. ✅ Clone the repo / Clona el repositorio:
+1. Clone this repo:
 ```bash
 git clone https://github.com/Haiubabdelkader99/water-pump-predictor.git
 cd water-pump-predictor
 ```
 
-2. ✅ Install dependencies / Instala las dependencias:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. ✅ Run any script / Ejecuta cualquier script:
+3. Run the app locally:
 ```bash
-python scripts/model_final_en.py
+streamlit run app_v4_final.py
 ```
 
 ---
 
+<<<<<<< HEAD
 ## 🌐 Streamlit App (Coming Soon) / Aplicación Interactiva
+=======
+## 👤 Author
+>>>>>>> 0951ddd (Update README with app details)
 
-**ENGLISH:** A Streamlit interactive app will allow CSV upload or manual input to predict pump status in real-time.
-
-**ESPAÑOL:** Próximamente se añadirá una app interactiva en Streamlit para cargar archivos CSV o introducir valores manuales y predecir el estado de la bomba en tiempo real.
+Made with ❤️ by [Haiub Abdelkader](https://linkedin.com/in/haiubabdelkader)  
+_Machine Learning & Data Analytics enthusiast._
 
 ---
 
-## 📧 Contact
+## 📜 License
 
-Developed by **Haiub Abdelkader**  
-🔗 [LinkedIn](https://linkedin.com/in/haiubabdelkader)
+This project is licensed under the MIT License.

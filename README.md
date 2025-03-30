@@ -1,69 +1,81 @@
-# 🚰 Pump It Up: Predicting Water Pump Status in Tanzania
+# 💧 Water Pump Predictor / Predicción del Estado de Bombas de Agua
 
-This repository contains a machine learning project developed for the DrivenData competition: **"Pump It Up: Data Mining the Water Table"**.
+**DrivenData Challenge: "Pump it Up - Data Mining the Water Table"**  
+Score obtenido en la leaderboard pública: **0.8185**
 
-The goal is to predict the functional status of water pumps in Tanzania based on technical, geographic, and demographic features.
+---
 
-## 📈 Final Score
+## 📘 Project Overview / Descripción del Proyecto
 
-✅ Public Leaderboard Score: **0.8185**
+**ENGLISH:**  
+This machine learning project aims to predict the functional status of water pumps in rural Tanzania using structured data. It is based on the DrivenData competition and uses models like Random Forest, XGBoost and LightGBM with tailored preprocessing and feature engineering.
 
-## 📂 Project Structure
+**ESPAÑOL:**  
+Este proyecto de machine learning tiene como objetivo predecir el estado funcional de bombas de agua en zonas rurales de Tanzania. Se basa en la competición de DrivenData y utiliza modelos como Random Forest, XGBoost y LightGBM, aplicando técnicas de preprocesado y optimización de hiperparámetros.
+
+---
+
+## 🎯 Final Score / Resultado Final
+
+- ✅ Model: **Random Forest Classifier**
+- ✅ Public Score: **0.8185**
+- ✅ Feature engineering: population log, construction year, amount_tsh, etc.
+- ✅ Handling of missing values with **KNNImputer**
+- ✅ Encoding with **TargetEncoder**
+- ✅ Hyperparameter tuning with **RandomizedSearchCV**
+
+---
+
+## 📂 Repository Structure / Estructura del Repositorio
 
 ```
-pump-it-up-ml/
-├── data/                    # Data location instructions (no raw files shared)
-├── scripts/                 # Final training scripts
-├── outputs/                 # Final CSV submission
-├── visuals/                 # Feature importance plots and graphs
-├── README.md                # Project documentation
-├── requirements.txt         # Required Python packages
-└── memo_modelo_8185.pdf     # Professional memo of the final model
+├── data/                     # Archivos CSV (train, test, labels)
+├── outputs/                  # submission_8185.csv generado
+├── visuals/                  # Gráficos generados (importancia, confusión, EDA)
+├── scripts/                  # Scripts de modelo, validación y comparación
+│   ├── model_final_en.py
+│   ├── 01_EDA.py
+│   ├── 02_Model_Validation.py
+│   └── 03_Model_Comparison_LGBM.py
+├── config.yaml               # Parámetros de configuración
+├── requirements.txt          # Dependencias
+├── README.md                 # Este archivo
+├── CHANGELOG.md              # Historial de versiones
+├── CONTRIBUTING.md           # Guía para contribuciones
+└── LICENSE
 ```
 
-## 💻 Technologies Used
+---
 
-- Python 3.13
-- pandas, NumPy
-- scikit-learn
-- matplotlib
+## 🚀 How to Run / Cómo Ejecutar
 
-## 🔧 Data Preprocessing & Feature Engineering
+1. ✅ Clone the repo / Clona el repositorio:
+```bash
+git clone https://github.com/Haiubabdelkader99/water-pump-predictor.git
+cd water-pump-predictor
+```
 
-- Removed low-impact columns: `recorded_by`, `wpt_name`, `scheme_name`, `num_private`
-- Handled missing values (mean for numerical, 'missing' for categorical)
-- Created new features:
-  - `years_old`: age of the pump
-  - `tsh_per_capita`: investment per person
-  - `log_population`: to reduce outlier impact
-  - `has_funder`: binary indicator
-- Used `OrdinalEncoder` for categorical variables
+2. ✅ Install dependencies / Instala las dependencias:
+```bash
+pip install -r requirements.txt
+```
 
-## 🤖 Model Description
+3. ✅ Run any script / Ejecuta cualquier script:
+```bash
+python scripts/model_final_en.py
+```
 
-- Model: `RandomForestClassifier`
-  - `n_estimators = 300`
-  - `max_depth = 25`
-  - `class_weight = 'balanced'`
+---
 
-## 📊 Feature Importance
+## 🌐 Streamlit App (Coming Soon) / Aplicación Interactiva (Próximamente)
 
-<img src="visuals/feature_importance.png" width="600">
+**ENGLISH:** A Streamlit interactive app will allow CSV upload or manual input to predict pump status in real-time.
 
-## 🔁 Next Steps
+**ESPAÑOL:** Próximamente se añadirá una app interactiva en Streamlit para cargar archivos CSV o introducir valores manuales y predecir el estado de la bomba en tiempo real.
 
-- Apply GridSearchCV for hyperparameter tuning
-- Test more advanced models: XGBoost, LightGBM
-- Try ensemble methods and feature selection
+---
 
-## 🧪 How to Reproduce
+## 📧 Contact
 
-1. Clone the repository
-2. Place the dataset CSVs in the `data/` folder
-3. Run the script in `scripts/model_final.py`
-4. Submission file will be saved in `outputs/submission_8185.csv`
-
-## 👤 Author
-
-Haiub  
-March 30, 2025
+Developed by **Haiub Abdelkader**  
+🔗 [LinkedIn](https://linkedin.com/in/haiubabdelkader)

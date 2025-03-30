@@ -5,7 +5,7 @@ Score obtenido en la leaderboard pública: **0.8185**
 
 ---
 
-## 📘 Project Overview / Descripción del Proyecto
+##  Project Overview / Descripción del Proyecto
 
 **ENGLISH:**  
 This machine learning project aims to predict the functional status of water pumps in rural Tanzania using structured data. It is based on the DrivenData competition and uses models like Random Forest, XGBoost and LightGBM with tailored preprocessing and feature engineering.
@@ -15,7 +15,7 @@ Este proyecto de machine learning tiene como objetivo predecir el estado funcion
 
 ---
 
-## 🎯 Final Score / Resultado Final
+##  Final Score / Resultado Final
 
 - ✅ Model: **Random Forest Classifier**
 - ✅ Public Score: **0.8185**
@@ -47,7 +47,7 @@ Este proyecto de machine learning tiene como objetivo predecir el estado funcion
 
 ---
 
-## 🚀 How to Run / Cómo Ejecutar
+##  How to Run / Cómo Ejecutar
 
 1. ✅ Clone the repo / Clona el repositorio:
 ```bash
@@ -67,7 +67,7 @@ python scripts/model_final_en.py
 
 ---
 
-## 🌐 Streamlit App (Coming Soon) / Aplicación Interactiva (Próximamente)
+## 🌐 Streamlit App (Coming Soon) / Aplicación Interactiva
 
 **ENGLISH:** A Streamlit interactive app will allow CSV upload or manual input to predict pump status in real-time.
 

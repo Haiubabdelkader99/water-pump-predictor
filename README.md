@@ -5,11 +5,11 @@
 
 ---
 
-<<<<<<< HEAD
+
 ##  Project Overview / Descripción del Proyecto
-=======
+
 ## 📌 Project Overview
->>>>>>> 0951ddd (Update README with app details)
+
 
 This app uses a trained `Random Forest` model to classify water pumps as:
 
@@ -21,9 +21,9 @@ It features a full ML pipeline, from preprocessing to prediction, live evaluatio
 
 ---
 
-<<<<<<< HEAD
+
 ##  Final Score / Resultado Final
-=======
+
 ## 🚀 Try it Online
 >>>>>>> 0951ddd (Update README with app details)
 
@@ -86,11 +86,10 @@ You can test the live app hosted on **Streamlit Cloud**:
 
 ---
 
-<<<<<<< HEAD
+
 ##  How to Run / Cómo Ejecutar
-=======
+
 ## 📦 Installation (Local)
->>>>>>> 0951ddd (Update README with app details)
 
 1. Clone this repo:
 ```bash

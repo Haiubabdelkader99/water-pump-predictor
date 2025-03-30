@@ -1,0 +1,19 @@
+# Configuration file for model and data paths
+
+data_path: "data/"
+output_path: "outputs/"
+visuals_path: "visuals/"
+
+model:
+  name: "RandomForestClassifier"
+  n_estimators: 200
+  max_depth: 25
+  class_weight: "balanced"
+  random_state: 42
+
+imputer:
+  method: "KNN"
+  neighbors: 5
+
+encoder:
+  method: "TargetEncoder"

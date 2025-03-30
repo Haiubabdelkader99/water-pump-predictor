@@ -1,0 +1,197 @@
+
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pydeck as pdk
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+from category_encoders import TargetEncoder
+from sklearn.impute import KNNImputer
+from sklearn.preprocessing import LabelEncoder
+
+# Configuración general
+st.set_page_config(page_title="Water Pump Dashboard (v4)", layout="wide")
+
+# Sidebar - Panel de control
+st.sidebar.title("🧭 Navigation")
+mode = st.sidebar.radio("Select Mode", ["🔍 Prediction", "📊 Evaluation", "📈 Visualization"])
+
+# Cargar artefactos
+@st.cache_resource
+def load_artifacts():
+    model = joblib.load("model_rf.joblib")
+    encoder = joblib.load("target_encoder.joblib")
+    imputer = joblib.load("knn_imputer.joblib")
+    columns = joblib.load("final_columns.joblib")
+    return model, encoder, imputer, columns
+
+model, encoder, imputer, final_columns = load_artifacts()
+
+# Función de preprocesado y predicción
+def preprocess_and_predict(df_input):
+    df = df_input.copy()
+    ids = df["id"] if "id" in df.columns else pd.Series(np.arange(len(df)))
+    df = df.drop(columns=["id"], errors="ignore")
+
+    num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+    cat_cols = df.select_dtypes(include=["object"]).columns
+
+    df[num_cols] = imputer.transform(df[num_cols])
+    df[cat_cols] = encoder.transform(df[cat_cols])
+    df = df[final_columns]
+
+    preds = model.predict(df)
+    label_map = {0: "functional", 1: "functional needs repair", 2: "non functional"}
+    preds_text = [label_map[p] for p in preds]
+    return preds_text, ids
+
+# Prediction mode
+if mode == "🔍 Prediction":
+    st.title("🔍 Predict Pump Functionality")
+    uploaded_file = st.file_uploader("Upload a test CSV file", type=["csv"])
+    if uploaded_file:
+        test_df = pd.read_csv(uploaded_file)
+        st.dataframe(test_df.head())
+
+        if st.button("Run Prediction"):
+            try:
+                preds, ids = preprocess_and_predict(test_df)
+                if "id" in test_df.columns:
+                    test_df = test_df.drop(columns=["id"])
+                result_df = pd.concat([ids.rename("id").reset_index(drop=True), test_df.reset_index(drop=True), pd.Series(preds, name="status_group")], axis=1)
+                st.success("✅ Prediction complete!")
+                st.dataframe(result_df.head())
+
+                # Download enriched CSV
+                csv = result_df.to_csv(index=False).encode("utf-8")
+                st.download_button("📥 Download results CSV", data=csv, file_name="predictions_full.csv", mime="text/csv")
+
+                # Mapa
+                st.subheader("🗺️ Prediction Map")
+                color_map = {
+                    "functional": [0, 153, 0],
+                    "functional needs repair": [255, 204, 0],
+                    "non functional": [204, 0, 0]
+                }
+                result_df["color"] = result_df["status_group"].map(color_map)
+                result_df = result_df.dropna(subset=["latitude", "longitude"])
+
+                st.pydeck_chart(pdk.Deck(
+                    map_style="mapbox://styles/mapbox/light-v9",
+                    initial_view_state=pdk.ViewState(
+                        latitude=result_df["latitude"].mean(),
+                        longitude=result_df["longitude"].mean(),
+                        zoom=5,
+                        pitch=0,
+                    ),
+                    layers=[
+                        pdk.Layer(
+                            "ScatterplotLayer",
+                            data=result_df,
+                            get_position='[longitude, latitude]',
+                            get_color="color",
+                            get_radius=100,
+                            pickable=True,
+                            auto_highlight=True
+                        )
+                    ],
+                    tooltip={"text": "Status: {status_group}"}
+                ))
+            except Exception as e:
+                st.error(f"Prediction failed: {str(e)}")
+
+# Evaluation mode
+elif mode == "📊 Evaluation":
+    st.title("📊 Model Evaluation")
+    train_file = st.file_uploader("Upload Trainingsetvalues.csv", type=["csv"], key="train")
+    label_file = st.file_uploader("Upload Trainginsetlabels.csv", type=["csv"], key="label")
+
+    if train_file and label_file:
+        X = pd.read_csv(train_file)
+        y = pd.read_csv(label_file)
+        df = pd.merge(X, y, on="id")
+        le = LabelEncoder()
+        y_enc = le.fit_transform(df["status_group"])
+        X = df.drop(columns=["id", "status_group"])
+
+        # Procesamiento
+        num_cols = X.select_dtypes(include=["int64", "float64"]).columns
+        cat_cols = X.select_dtypes(include=["object"]).columns
+        X[num_cols] = imputer.transform(X[num_cols])
+        X[cat_cols] = encoder.transform(X[cat_cols])
+        X = X[final_columns]
+
+        y_pred = model.predict(X)
+        st.subheader("🧾 Classification Report")
+        st.text(classification_report(y_enc, y_pred, target_names=le.classes_))
+
+        st.subheader("🧮 Confusion Matrix")
+        cm = confusion_matrix(y_enc, y_pred)
+        fig, ax = plt.subplots()
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=le.classes_, yticklabels=le.classes_)
+        st.pyplot(fig)
+
+# Visualization mode
+elif mode == "📈 Visualization":
+    st.title("📈 Interactive Dashboard")
+
+    uploaded_file = st.file_uploader("Upload a predictions file (with 'status_group')", type=["csv"], key="viz")
+    if uploaded_file:
+        df = pd.read_csv(uploaded_file)
+        regions = df["region"].unique().tolist()
+        years = df["construction_year"].unique()
+        status = df["status_group"].unique()
+
+        # Filtros
+        region_filter = st.sidebar.multiselect("Filter by Region", regions, default=regions)
+        year_range = st.sidebar.slider("Filter by Construction Year", int(min(years)), int(max(years)), (int(min(years)), int(max(years))))
+        status_filter = st.sidebar.multiselect("Filter by Status", status, default=status)
+
+        filtered_df = df[
+            (df["region"].isin(region_filter)) &
+            (df["construction_year"].between(*year_range)) &
+            (df["status_group"].isin(status_filter))
+        ]
+
+        st.metric("Filtered Pumps", len(filtered_df))
+        st.dataframe(filtered_df.head())
+
+        fig, ax = plt.subplots()
+        sns.countplot(data=filtered_df, x="status_group", order=status, palette="Blues", ax=ax)
+        ax.set_title("Status Distribution (Filtered)")
+        st.pyplot(fig)
+
+        if "latitude" in df.columns and "longitude" in df.columns:
+            st.subheader("🗺️ Filtered Map")
+            color_map = {
+                "functional": [0, 153, 0],
+                "functional needs repair": [255, 204, 0],
+                "non functional": [204, 0, 0]
+            }
+            filtered_df["color"] = filtered_df["status_group"].map(color_map)
+            filtered_df = filtered_df.dropna(subset=["latitude", "longitude"])
+
+            st.pydeck_chart(pdk.Deck(
+                map_style="mapbox://styles/mapbox/light-v9",
+                initial_view_state=pdk.ViewState(
+                    latitude=filtered_df["latitude"].mean(),
+                    longitude=filtered_df["longitude"].mean(),
+                    zoom=5,
+                    pitch=0,
+                ),
+                layers=[
+                    pdk.Layer(
+                        "ScatterplotLayer",
+                        data=filtered_df,
+                        get_position='[longitude, latitude]',
+                        get_color="color",
+                        get_radius=100,
+                        pickable=True,
+                        auto_highlight=True
+                    )
+                ],
+                tooltip={"text": "Status: {status_group}"}
+            ))

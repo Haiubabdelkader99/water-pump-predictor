@@ -25,7 +25,6 @@ It features a full ML pipeline, from preprocessing to prediction, live evaluatio
 ##  Final Score / Resultado Final
 
 ## 🚀 Try it Online
->>>>>>> 0951ddd (Update README with app details)
 
 You can test the live app hosted on **Streamlit Cloud**:
 
@@ -107,13 +106,10 @@ pip install -r requirements.txt
 streamlit run app_v4_final.py
 ```
 
----
-
-<<<<<<< HEAD
 ## 🌐 Streamlit App (Coming Soon) / Aplicación Interactiva
-=======
+
 ## 👤 Author
->>>>>>> 0951ddd (Update README with app details)
+
 
 Made with ❤️ by [Haiub Abdelkader](https://linkedin.com/in/haiubabdelkader)  
 _Machine Learning & Data Analytics enthusiast._
